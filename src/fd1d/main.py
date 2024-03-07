@@ -12,6 +12,7 @@ import visualize
 
 
 def main():
+    """FDTD method"""
 
     libname = "sources.so"
     # libname = sys.argv[1] # python main.py sources.so
@@ -28,10 +29,14 @@ def main():
 
     double = np.ctypeslib.ndpointer(dtype=np.float64, ndim=1, flags="C")
 
-    fdtd.pulse.argtypes = [ctypes.c_int, double, double, double, double]
-    fdtd.pulse.restype = ctypes.c_int
+    # fdtd.pulse.argtypes = [ctypes.c_int, double, double, double, double]
+    # fdtd.pulse.restype = ctypes.c_int
 
-    fdtd.pulse(ke, ex, hy, Ex, Hy)
+    fdtd.sinusoidal.argtypes = [ctypes.c_int, double, double, double, double]
+    fdtd.sinusoidal.restype = ctypes.c_int
+
+    # fdtd.pulse(ke, ex, hy, Ex, Hy)
+    fdtd.sinusoidal(ke, ex, hy, Ex, Hy)
 
     app = QtWidgets.QApplication(sys.argv)
     window = visualize.MainWindow(Ex.reshape(-1, ke), Hy.reshape(-1, ke))
