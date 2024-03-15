@@ -1,88 +1,45 @@
- /* Simulation sources */
+/* Simulation sources */
 
-#include <string.h>
 #include <math.h>
+#include "sources.h"
 
-int pulse(int ke, double *ex, double *hy, double *Ex, double *Hy) {
-    /* Gaussian pulse source
 
-       :param int ke: number of electric and magnetic field nodes
-       :param double *ex: electric field oriented in the x direction
-       :param double *hy: magnetic field oriented in the y direction
+/**
+ * Gaussian pulse source
+ *
+ * :param int time_step: an integer counter that serves as the temporal index
+ * :param int t0: time step at which gaussian function is maximum, default 40
+ * :param double spread: width of the gaussian pulse, default 12
+ *
+ * :return: gaussian pulse
+ * :rtype: double
+ */
+double gaussian(struct gaussian n) {
 
-       :return: *Ex, *Hy: stack of electric and magnetic field
-    */
+    int t0 = n.t0 ? n.t0 : 40;
+    double spread = n.spread ? n.spread : 12;
+    int time_step = n.time_step ? n.time_step : 0;
 
-    /* pulse parameters */
-    int kc = ke / 2;
-    int t0 = 40;
-    double spread = 12;
-    int nsteps = 500;
-
-    double lbound[2] = {0, 0};
-    double hbound[2] = {0, 0};
-
-    /* FDTD loop */
-    for (int time_step = 1; time_step <= nsteps; time_step++) {
-
-	    /* calculate the Ex field */
-	    for (int k = 1; k < ke; ex[k] = ex[k] + 0.5 * (hy[k-1] - hy[k]), k++);
-
-	    /* put a Gaussian pulse in the middle */
-	    ex[kc] = ex[kc] + exp(-0.5 * pow(((t0 - time_step) / spread), 2));
-
-	    /* absorbing boundary conditions */
-	    ex[0] = lbound[0], lbound[0] = lbound[1], lbound[1] = ex[1];
-	    ex[ke-1] = hbound[0], hbound[0] = hbound[1], hbound[1] = ex[ke-2];
-
-	    /* calculate the Hy field */
-	    for (int k = 0; k < ke - 1; hy[k] = hy[k] + 0.5 * (ex[k] - ex[k+1]), k++);
-
-	    memcpy(Ex + (time_step - 1) * ke, ex, ke * sizeof(*ex));
-	    memcpy(Hy + (time_step - 1) * ke, hy, ke * sizeof(*hy));
-    }
-
-    return 0;
+    return exp(-0.5 * pow(((t0 - time_step) / spread), 2));
 }
 
-int sinusoidal(int ke, double *ex, double *hy, double *Ex, double *Hy) {
-    /* Sinusoidal wave source
+/**
+ * Sinusoidal wave source
+ *
+ * :param int time_step: an integer counter that serves as the temporal index
+ * :param double ddx: the cell size (m), default 0.01 m
+ * :param double freq: frequency of the sinusoidal wave source, default 700 MHz
+ *
+ * :return: sinusoidal wave
+ * :rtype: double
+ */
+double sinusoidal(struct sinusoidal n) {
 
-       :param int ke: number of electric and magnetic field nodes
-       :param double *ex: electric field oriented in the x direction
-       :param double *hy: magnetic field oriented in the y direction
+    double ddx = n.ddx ? n.ddx : 0.01;
+    double freq = n.freq ? n.freq : 700e6;
+    int time_step = n.time_step ? n.time_step : 0;
 
-       :return: *Ex, *Hy: stack of electric and magnetic field
-    */
+    double dt = ddx / 6e8;
 
-    /* wave parameters */
-    float ddx = 0.01;
-    float dt = ddx / 6e8;
-    float freq = 700e6;
-    int nsteps = 500;
-
-    double lbound[2] = {0, 0};
-    double hbound[2] = {0, 0};
-
-    /* FDTD loop */
-    for (int time_step = 1; time_step <= nsteps; time_step++) {
-
-	    /* calculate the Ex field */
-	    for (int k = 1; k < ke; ex[k] = ex[k] + 0.5 * (hy[k-1] - hy[k]), k++);
-
-	    /* put a sinusoidal wave */
-	    ex[1] = ex[1] + sin(2 * 3.1415 * freq * dt * time_step);
-
-	    /* absorbing boundary conditions */
-	    ex[0] = lbound[0], lbound[0] = lbound[1], lbound[1] = ex[1];
-	    ex[ke-1] = hbound[0], hbound[0] = hbound[1], hbound[1] = ex[ke-2];
-
-	    /* calculate the Hy field */
-	    for (int k = 0; k < ke - 1; hy[k] = hy[k] + 0.5 * (ex[k] - ex[k+1]), k++);
-
-	    memcpy(Ex + (time_step - 1) * ke, ex, ke * sizeof(*ex));
-	    memcpy(Hy + (time_step - 1) * ke, hy, ke * sizeof(*hy));
-    }
-
-    return 0;
+    return sin(2 * M_PI * freq * dt * time_step);
 }
