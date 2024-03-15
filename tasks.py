@@ -2,10 +2,11 @@
 import invoke
 
 @invoke.task
-def sources(ctx, path=None):
+def simulation(ctx, path=None):
 	ctx.run("gcc -O3 -c -Wall -Werror -fpic -lm src/fd1d/sources.c")
-	ctx.run("gcc -shared -o src/fd1d/sources.so sources.o")
+	ctx.run("gcc -O3 -c -Wall -Werror -fpic -lm src/fd1d/simulation.c")
+	ctx.run("gcc -shared -o src/fd1d/simulation.so simulation.o sources.o")
 
 @invoke.task
 def clean(ctx, path=None):
-	ctx.run("rm -f sources.o")
+	ctx.run("rm -f simulation.o sources.o")
