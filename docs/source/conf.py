@@ -5,7 +5,7 @@
 import os
 import sys
 
-sys.path.append(os.path.abspath("../../src/fd1d"))
+sys.path.append(os.path.abspath("../../src/fdtd"))
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -29,7 +29,7 @@ extensions = [
     "sphinx_c_autodoc.viewcode",
 ]
 
-c_autodoc_roots = ["../../src/fd1d"]
+c_autodoc_roots = ["../../src/fdtd"]
 c_autodoc_compilation_args = ["-DSPHINX_DOCS", "-DSIMULATION"]
 
 templates_path = ["_templates"]
