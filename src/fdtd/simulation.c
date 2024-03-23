@@ -23,13 +23,13 @@ int simulate(int ke, double *ex, double *hy, double *Ex, double *Hy) {
     double hbound[2] = {0, 0};
 
     /* FDTD simulation loop */
-    for (int time_step = 1; time_step <= nsteps; time_step++) {
+    for (int t = 1; t <= nsteps; t++) {
 
 	    /* calculate the Ex field */
 	    for (int k = 1; k < ke; ex[k] = ex[k] + 0.5 * (hy[k-1] - hy[k]), k++);
 
 	    /* sinusoidal wave source (frequency 1900 MHz) */
-	    ex[1] = ex[1] + sinusoidal(time_step, .freq = 1900e6);
+	    ex[1] = ex[1] + sinusoidal(t, .freq = 1900e6);
 
 	    /* absorbing boundary conditions */
 	    ex[0] = lbound[0], lbound[0] = lbound[1], lbound[1] = ex[1];
@@ -38,8 +38,8 @@ int simulate(int ke, double *ex, double *hy, double *Ex, double *Hy) {
 	    /* calculate the Hy field */
 	    for (int k = 0; k < ke - 1; hy[k] = hy[k] + 0.5 * (ex[k] - ex[k+1]), k++);
 
-	    memcpy(Ex + (time_step - 1) * ke, ex, ke * sizeof(*ex));
-	    memcpy(Hy + (time_step - 1) * ke, hy, ke * sizeof(*hy));
+	    memcpy(Ex + (t - 1) * ke, ex, ke * sizeof(*ex));
+	    memcpy(Hy + (t - 1) * ke, hy, ke * sizeof(*hy));
     }
 
     return 0;

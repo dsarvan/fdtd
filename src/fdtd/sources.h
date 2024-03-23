@@ -5,16 +5,16 @@
  * default values in gaussian pulse
  */
 struct gaussian {
-    int time_step;
+    int t;
     int t0;
-    double spread;
+    double sigma;
 };
 
 /**
  * default values in sinusoidal
  */
 struct sinusoidal {
-    int time_step;
+    int t;
     double ddx;
     double freq;
 };
