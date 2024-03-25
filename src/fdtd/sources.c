@@ -24,6 +24,25 @@ double gaussian(struct gaussian n) {
 }
 
 /**
+ * Normalized differentiated Gaussian pulse source
+ *
+ * :param int t: an integer counter that serves as the temporal index
+ * :param int t0: time step at which gaussian function is maximum, default 40
+ * :param double sigma: width of the gaussian pulse, default 12
+ *
+ * :return: normalized differentiated gaussian pulse
+ * :rtype: double
+ */
+double normalized_gaussian(struct gaussian n) {
+
+    int t = n.t ? n.t : 0;
+    int t0 = n.t0 ? n.t0 : 40;
+    double sigma = n.sigma ? n.sigma : 12;
+
+    return -(t - t0) / sigma * exp(-0.5 * pow(((t - t0) / sigma), 2));
+}
+
+/**
  * Sinusoidal wave source
  *
  * :param int t: an integer counter that serves as the temporal index

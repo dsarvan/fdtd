@@ -20,6 +20,7 @@ struct sinusoidal {
 };
 
 double gaussian(struct gaussian n);
+double normalized_gaussian(struct gaussian n);
 double sinusoidal(struct sinusoidal n);
 
 #endif /* SOURCES_H_ */

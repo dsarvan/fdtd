@@ -3,7 +3,8 @@
 #include <string.h>
 #include "sources.h"
 
-#define pulse(...) pulse((struct pulse){__VA_ARGS__});
+#define gaussian(...) gaussian((struct gaussian){__VA_ARGS__});
+#define normalized_gaussian(...) normalized_gaussian((struct gaussian){__VA_ARGS__});
 #define sinusoidal(...) sinusoidal((struct sinusoidal){__VA_ARGS__});
 
 /**
